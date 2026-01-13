@@ -5,7 +5,7 @@ import MyApp from "./MyApp";
 import "./main.css";
 
 // Create the container
-const container = document.getElementById("root");  
+const container = document.getElementById("root");
 
 // Create a root
 const root = ReactDOMClient.createRoot(container);
