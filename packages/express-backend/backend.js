@@ -85,7 +85,7 @@ const findUserById = (id) =>
   users["users_list"].find((user) => user["id"] === id);
 
 app.get("/users/:id", (req, res) => {
-  console.log("Hello i am in the user/:id line 69");
+  //console.log("Hello i am in the user/:id line 69");
   const id = req.params["id"];
   let result = findUserById(id);
   if(result === undefined) {
@@ -98,18 +98,35 @@ app.get("/users/:id", (req, res) => {
 // Step 6 - Using the POST
 const addUser = (user) => {
   users["users_list"].push(user);
-  console.log("Hello i am the add user function");
+  //console.log("Hello i am the add user function");
   return user;
 }
 
 app.post("/users", (req,res) => {
   const userToAdd = req.body;
   addUser(userToAdd);
-  console.log("I AM IN POST");
+  //console.log("I AM IN POST");
   res.send();
 });
 
 
 // step 7
 // Delete
+const delUserById = (id) => {
+  return users["users_list"].filter(
+    (user) => (user["id"] != id)
+  );
+};
 
+app.delete("/users/:id", (req, res) =>{
+  const id = req.params["id"];
+  let result = findUserById(id);
+
+  if(result === undefined){
+    res.status(404).send("User not found");
+  } else {
+    users["users_list"] = delUserById(id);
+    //console.log(users["users_list"]);
+    res.send("Delete Request Call");
+  }
+});
