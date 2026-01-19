@@ -104,9 +104,12 @@ const addUser = (user) => {
 
 app.post("/users", (req, res) => {
   const userToAdd = req.body;
+
+  if(userToAdd["id"] === undefined){
+    userToAdd["id"] = `${Math.random()}`;
+  }
   addUser(userToAdd);
-  //console.log("I AM IN POST");
-  res.send();
+  res.status(201).send(userToAdd);
 });
 
 // step 7
@@ -116,14 +119,18 @@ const delUserById = (id) => {
 };
 
 app.delete("/users/:id", (req, res) => {
+  console.log("Hello i an im delete")
   const id = req.params["id"];
   let result = findUserById(id);
 
+  console.log(`This is the current id ${id}`)
+  console.log(`This is the current result ${result}`)
   if (result === undefined) {
+    console.log("Faild")
     res.status(404).send("User not found");
   } else {
     users["users_list"] = delUserById(id);
     //console.log(users["users_list"]);
-    res.send("Delete Request Call");
+    res.status(204).send("Delete Request Call");
   }
 });

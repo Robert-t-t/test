@@ -7,15 +7,33 @@ function MyApp() {
   const [characters, setCharacters] = useState([]);
 
   function removeOneCharacter(index) {
-    const updated = characters.filter((character, i) => {
-      return i != index;
-    });
-    setCharacters(updated);
+    const id = characters[index]["id"];
+    delUser(id)
+          .then((res) => {
+            if(res.status !== 204){
+              throw new Error("User not found");
+            }
+            
+            const updated = characters.filter((character, i) => {
+              return i != index;
+            });
+            setCharacters(updated);
+          })
+          .catch((error) => {
+            console.log(error);
+          })
   }
 
   function updateList(person) {
     postUser(person)
-        .then(() => setCharacters([...characters, person]))
+        .then((res) => {
+          if(res.status != 201){
+            throw new Error("No created content");
+          }
+          
+          return res.json();
+        })
+        .then((NewUser) => setCharacters([...characters, NewUser]))
         .catch((error) => {
           console.log(error);
         })
@@ -41,6 +59,14 @@ function MyApp() {
       },
       body: JSON.stringify(person),
     });
+    return promise;
+  }
+
+  function delUser(id){
+    const promise = fetch(`http://localhost:8000/users/${id}`,{
+      method: 'DELETE'
+    });
+
     return promise;
   }
 
